@@ -4431,6 +4431,10 @@ class TestTorchDeviceType(TestCase):
         if not x.is_complex():
             with self.assertRaisesRegex(RuntimeError, r"Scalar"):
                 x.index_fill_(1, index, 1 + 1j)
+        x = torch.tensor(1, dtype=dtype, device=device)
+        # Make sure that the result stays 0-dim while applied to
+        # a 0-dim input
+        self.assertEqual(x.dim(), x.index_fill(0, index, -1).dim())
 
     def test_index_select(self, device):
         for dtype in [torch.int, torch.long]:
